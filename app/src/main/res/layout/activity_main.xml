@@ -11,42 +11,74 @@
 
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:weightSum="100"
-        android:id="@+id/linearLayout2">
+        android:id="@+id/linearLayout3">
 
-        <EditText
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/locationInput"
-            android:textColor="@android:color/white"
-            android:layout_weight="90"
-            android:textSize="18sp"
-            android:gravity="bottom"
-            android:hint="Enter Location"
-            android:singleLine="true"/>
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:weightSum="100"
+            android:id="@+id/linearLayout2"
+            android:focusableInTouchMode="true">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/refreshImageView"
-            android:src="@drawable/refresh"
-            android:layout_weight="10"
-            android:visibility="visible"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pinpointImageView"
+                android:src="@drawable/locationicon"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/refreshProgressBar"
-            android:layout_weight="10"
-            android:visibility="invisible"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=" or "
+                android:id="@+id/textView" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/locationInput"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:gravity="bottom"
+                android:maxLines="1"
+                android:hint="@string/location_bar_hint"
+                android:singleLine="true"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/refreshImageView"
+                android:src="@drawable/refresh_icon"
+                android:layout_weight="0"
+                android:visibility="visible"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/refreshProgressBar"
+                android:layout_weight="0"
+                android:visibility="gone"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
+        </LinearLayout>
     </LinearLayout>
-
 
     <ImageView
         android:layout_width="wrap_content"
@@ -221,16 +253,5 @@
         android:layout_marginTop="15dp"
         android:textSize="18sp"
         android:gravity="center_horizontal"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Use Current"
-        android:id="@+id/btnUseCurrentLoc"
-        android:textColor="@android:color/white"
-        android:layout_weight="90"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

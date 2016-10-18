@@ -74,7 +74,8 @@ public class CurrentWeather {
 
     public String getFormattedTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
-        formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
+        //get default timezone based on the location in which the app is being run
+        formatter.setTimeZone(TimeZone.getDefault());
         String timeString = formatter.format(new Date(getTime() * 1000));
 
         return timeString;

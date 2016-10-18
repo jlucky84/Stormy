@@ -8,7 +8,7 @@
     <string name="forecast_url" formatted="false">https://api.forecast.io/forecast/%s/%f,%f</string>
     <string name="google_maps_url" formatted="false">https://maps.googleapis.com/maps/api/geocode/json?address=%s</string>
 
-    <string name="empty_location_field_message">Please enter a location, or click "Use Current".</string>
+    <string name="empty_location_field_message">Please enter a location, or click the location icon.</string>
     <string name="time_label_text" formatted="false">Conditions in %s \n Last updated: %s</string>
 
     <string name="error_title">Oops! Sorry!</string>
@@ -18,5 +18,6 @@
     <string name="error_api_key">Error obtaining API keys. Weather data cannot be accessed.</string>
     <string name="error_network_unavailable">Network is unavailable.</string>
     <string name="error_api_file_read">API Key file not found.</string>
+    <string name="location_bar_hint">Enter location</string>
 
 </resources>

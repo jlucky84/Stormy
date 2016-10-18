@@ -55,7 +55,7 @@ public class LocationHelper {
             String mapsUrl = context.getString(R.string.google_maps_url);
             mapsUrl = String.format(mapsUrl, address);
 
-            Toast.makeText(context,"URL: " + mapsUrl,Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"URL: " + mapsUrl,Toast.LENGTH_LONG).show();
 
             Request request = new Request.Builder()
                     .url(mapsUrl)
@@ -112,10 +112,8 @@ public class LocationHelper {
         //JSONObject bounds = geodeticData.getJSONObject("bounds");
         JSONObject coordinates = geodeticData.getJSONObject("location");
 
-        double latitude = coordinates.getDouble("lat");
-        double longitude = coordinates.getDouble("lng");
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitude = coordinates.getDouble("lat");;
+        this.longitude = coordinates.getDouble("lng");
     }
 
     private boolean isNetworkAvailable() {
@@ -137,7 +135,7 @@ public class LocationHelper {
     }
 
     public double getLatitude() {
-        return latitude;
+        return this.latitude;
     }
 
     public void setLatitude(double latitude) {
@@ -145,7 +143,7 @@ public class LocationHelper {
     }
 
     public double getLongitude() {
-        return longitude;
+        return this.longitude;
     }
 
     public void setLongitude(double longitude) {

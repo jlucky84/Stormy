@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ public class MainActivity extends Activity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private String googleMapsApiKey, forecastApiKey, forecastURL;
+    private final int SNOW_TEMP_FH = 45;
     private CurrentWeather mCurrentWeather;
     private LocationHelper mLocationHelper;
     private LocationGeocoder mGeocoder;
@@ -49,8 +51,10 @@ public class MainActivity extends Activity {
     @Bind(R.id.windValue) TextView mWindValue;
     @Bind(R.id.locationInput) EditText mLocationInput;
     @Bind(R.id.refreshImageView) ImageView mRefreshImageView;
+    @Bind(R.id.pinpointImageView) ImageView mPinpointImageView;
+    //@Bind(R.id.loadingImageView) ImageView mLoadingImageView;
+    @Bind(R.id.precipChanceLabel) TextView mPrecipLabel;
     @Bind(R.id.refreshProgressBar) ProgressBar mProgressBar;
-    @Bind(R.id.btnUseCurrentLoc) Button mUseCurrentLocation;
 
 
     @Override
@@ -63,12 +67,22 @@ public class MainActivity extends Activity {
 
         generateApiKeys(res);
 
+        mLocationInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (hasWindowFocus()) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                }
+            }
+        });
+
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //verify API keys are accessible
                 if (apiKeysVerified()) {
-                    final String inputLocation = mLocationInput.getText().toString();
+                    String inputLocation = mLocationInput.getText().toString();
                     if (inputIsNotNull(inputLocation)) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -79,7 +93,7 @@ public class MainActivity extends Activity {
 
                         mLocationHelper = new LocationHelper(getApplicationContext(), getResources());
                         mLocationHelper.getMapsData(inputLocation);
-                        getForecast(mLocationHelper.getLatitude(), mLocationHelper.getLongitude());
+                        getForecast(mLocationHelper);
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -100,33 +114,10 @@ public class MainActivity extends Activity {
         });
 
 
-/*        mUseCurrentLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (apiKeysVerified()) {
-                    String userLocation = mLocationEditText.getText().toString();
-                    if (inputIsNotNull(userLocation)) {
-                        //TODO Call MapsAPI to get Coords
-                        LocationHelper locationHelper = new LocationHelper(context, getResources());
-                    } else {
-                        showMessage(getString(R.string.empty_location_field_message),
-                                Toast.LENGTH_SHORT);
-                    }
 
-                    mGeocoder = new LocationGeocoder(context);
-                    if (mGeocoder.canGetLocation()) {
-                        getForecast(mGeocoder.getLatitude(), mGeocoder.getLongitude());
-                    } else {
-                        showMessage(getString(R.string.error_network_unavailable), Toast.LENGTH_LONG);
-                    }
-                } else {
-                    showMessage(getString(R.string.error_api_key), Toast.LENGTH_SHORT);
-                }
-            }
-        });*/
     }
 
-    private void getForecast(double latitude, double longitude) {
+    private void getForecast(LocationHelper locationHelper) {
         Resources res = getResources();
         String forecastURL = res.getString(R.string.forecast_url);
 
@@ -140,9 +131,10 @@ public class MainActivity extends Activity {
             OkHttpClient client = new OkHttpClient();
             forecastURL = String.format(forecastURL,
                     forecastApiKey,
-                    latitude,
-                    longitude);
+                    locationHelper.getLatitude(),
+                    locationHelper.getLongitude());
 
+            Log.d(TAG,"Forecast URL: " + forecastURL);
             Request request = new Request.Builder()
                     .url(forecastURL)
                     .build();
@@ -234,12 +226,15 @@ public class MainActivity extends Activity {
     }
 
     private void updateDisplay() {
-        mTempLabel.setText(mCurrentWeather.getTemperature() + "");
+        int currTemp = mCurrentWeather.getTemperature();
+        mTempLabel.setText(currTemp + "");
+        if(currTemp <= SNOW_TEMP_FH)
+            mPrecipLabel.setText("RAIN/SNOW?");
+        else
+            mPrecipLabel.setText("RAIN?");
         mHumidityValue.setText(mCurrentWeather.getHumidity() + "%");
-
         mTimeLabel.setText(
-                String.format(Locale.getDefault(),
-                        getString(R.string.time_label_text),
+                String.format(Locale.getDefault(), getString(R.string.time_label_text),
                         mLocationHelper.getCityStateInfo(),
                         mCurrentWeather.getFormattedTime()));
         mSummaryLabel.setText(mCurrentWeather.getSummary());
